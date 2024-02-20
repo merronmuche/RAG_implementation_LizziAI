@@ -1,7 +1,7 @@
 
 # from django.shortcuts import HttpResponse, render
 
-# from prompt_app.utils.prompt_gen import get_prompt
+# from contract_app.utils.prompt_gen import get_prompt
 # from .utils.embed_text import embed_text
 # from .utils.similarity import cosine_similarity
 
@@ -41,11 +41,11 @@
 #         if best_text_chunk is not None:
 #             generated_prompt = generate_prompt_from_vector(best_text_chunk, input_text)
 #             # return HttpResponse(generated_prompt)
-#             return render(request, 'prompt_app/prompt_result.html', {'generated_prompt': generated_prompt})
+#             return render(request, 'contract_app/prompt_result.html', {'generated_prompt': generated_prompt})
 #         else:
 #             return HttpResponse("No similar documents found.")
 #     else:
-#         return render(request, 'prompt_app/generate_prompt.html')
+#         return render(request, 'contract_app/generate_prompt.html')
     
        
 
@@ -108,10 +108,10 @@ def generate_response(request):
             # Use the user's question and the relevant text chunk directly
             response = generate_response_with_gpt_turbo(user_question, best_text_chunk)
 
-            return render(request, 'prompt_app/prompt_result.html', {'generated_response': response})
-            # return render(request, 'prompt_app/generate_response.html', {'generated_response': response})
+            return render(request, 'contract_app/prompt_result.html', {'generated_response': response})
+            # return render(request, 'contract_app/generate_response.html', {'generated_response': response})
 
         else:
             return HttpResponse("No similar documents found.")
     elif request.method == 'GET':
-        return render(request, 'prompt_app/generate_response.html')
+        return render(request, 'contract_app/generate_response.html')

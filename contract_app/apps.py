@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class PromptAppConfig(AppConfig):
+class ContractAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'prompt_app'
+    name = 'contract_app'
