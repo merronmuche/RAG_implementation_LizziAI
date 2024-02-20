@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -87,18 +88,19 @@
             </div>
             <nav>
                 <ul>
-                    <li class="current"><a href="{% url 'generate_response'' %}">Home</a></li>
+                    <li class="current">
+                        <a href="{% url 'generate_response' %}">Home</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <div class="container">
-        <h2>Generated Prompt</h2>
+        <h2>Generated Response</h2>
         <div class="scrollable-paragraph">
-            {{ generate_response }}
+            {{ generated_response }}
         </div>
-        <a href="{% url 'generate_response'' %}">Generate another prompt</a>
+        <a href="{% url 'generate_response' %}">Generate another Response</a>
     </div>
 </body>
 </html>
