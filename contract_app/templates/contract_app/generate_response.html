@@ -8,12 +8,34 @@
     <link rel="stylesheet" type="text/css" href="{% static 'contract_app/styles.css' %}">
 </head>
 <body>
-    <h2>Automatic Prompt Generation</h2>
+    <div class="container">
+        <h2>Automatic Prompt Generation</h2>
+    </div>
+
     <form method="post" action="{% url 'generate_response' %}">
         {% csrf_token %}
+        <!--  document selection -->
+        <label for="document">Select Document:</label>
+            <select name="document" id="document">
+                <option value="">All Documents</option>
+                {% for document in documents %}
+                    <option value="{{ document.pdf_file.name }}" {% if document.pdf_file.name == selected_document %}selected{% endif %}>
+                        {{ document.pdf_file.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <!-- generated response display -->
+            <div class="scrollable-paragraph">
+                {{ generated_response }}
+            </div>
+            <!-- input text -->
         <label for="input_text">Enter your text:</label><br>
         <textarea id="input_text" name="input_text" cols="40" rows="5" placeholder="Enter your text here"></textarea><br>
         <input type="submit" value="Generate">
     </form>
+    <a href="{% url 'generate_response' %}">Generate another Response</a>
+
 </body>
 </html>
+
+
