@@ -2,6 +2,7 @@
 from langchain.embeddings.openai import OpenAIEmbeddings
 from dotenv import load_dotenv
 
+
 from . chunk_pdf import extract_text_from_pdf, chunk_text
 
 load_dotenv()
@@ -12,7 +13,6 @@ def embed_text(chunks):
     embeds = embed_model.embed_documents(chunks)
 
     return embeds
-
 
 if __name__ == "__main__":
 

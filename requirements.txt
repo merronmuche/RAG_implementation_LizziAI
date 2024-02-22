@@ -3,3 +3,4 @@ langchain==0.1.8
 Django==5.0.2
 PyMuPDF==1.23.22
 langchain-openai
+chromadb==0.4.22
