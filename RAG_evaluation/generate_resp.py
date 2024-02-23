@@ -46,4 +46,4 @@ def get_reponse(user_question, selected_document_name):
         response = generate_response_with_gpt_turbo(user_question, total_text)
 
 
-    return response.content, total_text
+    return response.content, best_text_chunks
