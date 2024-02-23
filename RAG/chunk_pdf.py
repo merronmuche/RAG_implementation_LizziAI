@@ -21,7 +21,7 @@ def extract_text_from_pdf(pdf_path):
     return full_text
 
 
-def chunk_text(text, words_per_chunk=500, overlap_size=20):
+def chunk_text(text, words_per_chunk=1000, overlap_size=50):
     # Split the text into words
     words = text.split()
 
