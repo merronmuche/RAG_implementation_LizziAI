@@ -27,7 +27,6 @@ def generate_response_with_gpt_turbo(user_question, relevant_text_chunk):
     
 
     # Implement the GPT-3.5 Turbo API call to generate a response
-    # Replace the following line with your actual API call
     response = chat.invoke([
             HumanMessage(
                 content=prompt
@@ -35,7 +34,6 @@ def generate_response_with_gpt_turbo(user_question, relevant_text_chunk):
             
         ])
 
-    # Assuming response is the generated answer
     return response
 
 def generate_response(request):
