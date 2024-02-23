@@ -1,8 +1,8 @@
 
 from django.shortcuts import HttpResponse, render
 
-from .utils.embed_text import embed_text
-from .utils.similarity import cosine_similarity
+from RAG.embed_text import embed_text
+from RAG.similarity import cosine_similarity
 from dotenv import load_dotenv
 from .models import Document, TextChunk
 from langchain_openai import ChatOpenAI

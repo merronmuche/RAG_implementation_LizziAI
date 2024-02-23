@@ -2,8 +2,9 @@
 
 from collections.abc import Iterable
 from django.db import models
-from .utils.chunk_pdf import extract_text_from_pdf, chunk_text
-from .utils.embed_text import embed_text
+from RAG.chunk_pdf import extract_text_from_pdf, chunk_text
+from RAG.embed_text import embed_text
+
 import logging
 
 logger = logging.getLogger(__name__)
