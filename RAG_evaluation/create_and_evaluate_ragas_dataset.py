@@ -19,7 +19,7 @@ from RAG_evaluation.generate_resp import get_reponse
 async def create_ragas_dataset(eval_dataset):
   rag_dataset = []
   for row in tqdm(eval_dataset):
-    answer, context = await get_reponse(row["question"], selected_document_name='pdfs/Raptor_Contract.docx_odQK02a.pdf')
+    answer, context = await get_reponse(row["question"], selected_document_name='docx/Raptor_Contract.docx')
     rag_dataset.append(
         {"question" : row["question"],
          "answer" : answer,

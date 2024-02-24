@@ -45,9 +45,13 @@ async def get_reponse(user_question, selected_document_name):
     # Extract only the chunks from the tuple
     best_text_chunks = [chunk for _, chunk in best_text_chunks]
     total_text = ''.join(best_text_chunks)
+    response = None  # Add a default value
     if best_text_chunks:
         response = generate_response_with_gpt_turbo(user_question, total_text)
 
+    return response.content if response else None, best_text_chunks
 
-    return response.content, best_text_chunks
+
+
+
 
