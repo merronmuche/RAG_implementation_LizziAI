@@ -1,10 +1,10 @@
 
 from django.shortcuts import HttpResponse, render
 
-from .utils.embed_text import embed_text
-from .utils.similarity import cosine_similarity
+from embed_text import embed_text
+from similarity import cosine_similarity
 from dotenv import load_dotenv
-from .models import Document, TextChunk
+from contract_app.models import Document, TextChunk
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 
@@ -13,18 +13,14 @@ load_dotenv()
 
 chat = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0.2)
 
-
-
 def generate_response_with_gpt_turbo(user_question, relevant_text_chunk):
     # Combine the user's question and relevant text chunk into a prompt
-    prompt = f" you are an AI language model assistant. Your task is, based on \
-              the relevant_text_chunk, give an answer to \
-              the users question. restrict yourself to the given data only. \
-              NOTE: if you can't get an answer based on the data, you have to \
-              say i don't know.DO NOT SAY Based on the given data and be specific.\
-                \n + {user_question}\n{relevant_text_chunk}\n"
+    prompt = f"AI Language Model Assistant, based on the provided information:\n"\
+            f"User Question: '{user_question}'\n"\
+            f"Relevant Text Chunk: '{relevant_text_chunk}'\n"\
+            f"Please provide a concise and fact-based answer to the user's question:\n"\
+            f"Answer: "
     
-
     response = chat.invoke([
             HumanMessage(
                 content=prompt

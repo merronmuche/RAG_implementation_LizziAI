@@ -19,7 +19,6 @@ from asgiref.sync import sync_to_async
 
 async def get_reponse(user_question, selected_document_name):
 
-    # selected_document = Document.objects.filter(pdf_file__icontains=selected_document_name)[0]
     selected_documents = await sync_to_async(Document.objects.filter)(pdf_file__icontains=selected_document_name)
     selected_document = await sync_to_async(selected_documents.first)()
 
@@ -28,9 +27,6 @@ async def get_reponse(user_question, selected_document_name):
     embeded_question = embed_text([user_question])[0]
 
     best_text_chunks = []
-    # Compare with embeddings in TextChunk objects
-    # chunks = TextChunk.objects.filter(document=selected_document)
-    # chunks = await sync_to_async(TextChunk.objects.filter)(document=selected_document)
     chunks = await sync_to_async(list)(TextChunk.objects.filter(document=selected_document))
 
     for text_chunk in chunks:

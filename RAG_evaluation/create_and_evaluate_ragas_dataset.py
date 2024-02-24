@@ -1,6 +1,4 @@
 
-
-
 from tqdm import tqdm
 from ragas.metrics.critique import harmfulness
 from ragas import evaluate
@@ -15,14 +13,12 @@ from ragas.metrics import (
 )
 import pandas as pd
 from datasets import Dataset
-
 from RAG_evaluation.generate_resp import get_reponse
 
 
 async def create_ragas_dataset(eval_dataset):
   rag_dataset = []
   for row in tqdm(eval_dataset):
-    # answer, context = get_reponse(row["question"], selected_document_name='pdfs/Raptor_Contract.docx_odQK02a.pdf')
     answer, context = await get_reponse(row["question"], selected_document_name='pdfs/Raptor_Contract.docx_odQK02a.pdf')
     rag_dataset.append(
         {"question" : row["question"],
