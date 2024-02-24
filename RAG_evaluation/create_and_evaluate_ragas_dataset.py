@@ -27,7 +27,7 @@ async def create_ragas_dataset(eval_dataset):
     rag_dataset.append(
         {"question" : row["question"],
          "answer" : answer,
-         "contexts" : [context[0]],
+         "contexts" : context,
          "ground_truths" : [row["answer"]] # This is the ground truth
          }
     )
@@ -38,6 +38,7 @@ async def create_ragas_dataset(eval_dataset):
 def evaluate_ragas_dataset(ragas_dataset):
   result = evaluate(
     ragas_dataset,
+    raise_exceptions = False,
     metrics=[
         context_precision,
         faithfulness,
@@ -45,7 +46,7 @@ def evaluate_ragas_dataset(ragas_dataset):
         context_recall,
         context_relevancy,
         answer_correctness,
-        answer_similarity
+        answer_similarity, 
     ],
   )
   return result
