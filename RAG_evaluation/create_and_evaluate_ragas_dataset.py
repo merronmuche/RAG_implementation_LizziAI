@@ -19,14 +19,15 @@ from datasets import Dataset
 from RAG_evaluation.generate_resp import get_reponse
 
 
-def create_ragas_dataset(eval_dataset):
+async def create_ragas_dataset(eval_dataset):
   rag_dataset = []
   for row in tqdm(eval_dataset):
-    answer, context = get_reponse(row["question"], selected_document_name='pdfs/Raptor_Contract.docx_odQK02a.pdf')
+    # answer, context = get_reponse(row["question"], selected_document_name='pdfs/Raptor_Contract.docx_odQK02a.pdf')
+    answer, context = await get_reponse(row["question"], selected_document_name='pdfs/Raptor_Contract.docx_odQK02a.pdf')
     rag_dataset.append(
         {"question" : row["question"],
          "answer" : answer,
-         "contexts" : context,
+         "contexts" : [context[0]],
          "ground_truths" : [row["answer"]] # This is the ground truth
          }
     )

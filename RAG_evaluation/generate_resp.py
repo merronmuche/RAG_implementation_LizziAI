@@ -14,17 +14,24 @@ sys.path.append('..')
 from RAG.embed_text import embed_text
 from RAG.similarity import cosine_similarity
 from contract_app.models import Document, TextChunk
+from asgiref.sync import sync_to_async
 
 
-def get_reponse(user_question, selected_document_name):
-    selected_document = Document.objects.filter(pdf_file__icontains=selected_document_name)[0]
+async def get_reponse(user_question, selected_document_name):
+
+    # selected_document = Document.objects.filter(pdf_file__icontains=selected_document_name)[0]
+    selected_documents = await sync_to_async(Document.objects.filter)(pdf_file__icontains=selected_document_name)
+    selected_document = await sync_to_async(selected_documents.first)()
+
 
     # Embed the user's input
     embeded_question = embed_text([user_question])[0]
 
     best_text_chunks = []
     # Compare with embeddings in TextChunk objects
-    chunks = TextChunk.objects.filter(document=selected_document)
+    # chunks = TextChunk.objects.filter(document=selected_document)
+    # chunks = await sync_to_async(TextChunk.objects.filter)(document=selected_document)
+    chunks = await sync_to_async(list)(TextChunk.objects.filter(document=selected_document))
 
     for text_chunk in chunks:
         similarity = cosine_similarity(embeded_question, text_chunk.embed)
@@ -47,3 +54,4 @@ def get_reponse(user_question, selected_document_name):
 
 
     return response.content, best_text_chunks
+
