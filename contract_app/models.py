@@ -2,7 +2,7 @@
 
 from collections.abc import Iterable
 from django.db import models
-from RAG.chunk_pdf import extract_text_from_pdf, chunk_text
+from RAG.chunk_pdf import read_docx, chunk_text
 from RAG.embed_text import embed_text
 
 import logging
@@ -21,25 +21,25 @@ class Prompt(models.Model):
     
 
 class Document(models.Model):
-    pdf_file = models.FileField(upload_to='pdfs/')
+    pdf_file = models.FileField(upload_to='docx/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"PDF File uploaded on {self.created_at}"
+        return f"docx File uploaded on {self.created_at}"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
         if self.pdf_file:  
-            text = extract_text_from_pdf(self.pdf_file.path)
+            text = read_docx(self.pdf_file.path)
             chunks = chunk_text(text)
             embeds = embed_text(chunks)
 
             for chunk, embed in zip(chunks, embeds):
                 TextChunk.objects.create(document=self, chunk=chunk, embed=embed)
         else:
-            logger.error("No PDF file to process.")
+            logger.error("No docx file to process.")
 
 class TextChunk(models.Model):
 
