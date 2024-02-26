@@ -14,17 +14,20 @@ sys.path.append('..')
 from RAG.embed_text import embed_text
 from RAG.similarity import cosine_similarity
 from contract_app.models import Document, TextChunk
+from asgiref.sync import sync_to_async
 
 
-def get_reponse(user_question, selected_document_name):
-    selected_document = Document.objects.filter(pdf_file__icontains=selected_document_name)[0]
+async def get_reponse(user_question, selected_document_name):
+
+    selected_documents = await sync_to_async(Document.objects.filter)(pdf_file__icontains=selected_document_name)
+    selected_document = await sync_to_async(selected_documents.first)()
+
 
     # Embed the user's input
     embeded_question = embed_text([user_question])[0]
 
     best_text_chunks = []
-    # Compare with embeddings in TextChunk objects
-    chunks = TextChunk.objects.filter(document=selected_document)
+    chunks = await sync_to_async(list)(TextChunk.objects.filter(document=selected_document))
 
     for text_chunk in chunks:
         similarity = cosine_similarity(embeded_question, text_chunk.embed)
@@ -42,8 +45,13 @@ def get_reponse(user_question, selected_document_name):
     # Extract only the chunks from the tuple
     best_text_chunks = [chunk for _, chunk in best_text_chunks]
     total_text = ''.join(best_text_chunks)
+    response = None  # Add a default value
     if best_text_chunks:
         response = generate_response_with_gpt_turbo(user_question, total_text)
 
+    return response.content if response else None, best_text_chunks
 
-    return response.content, best_text_chunks
+
+
+
+

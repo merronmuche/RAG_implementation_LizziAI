@@ -1,7 +1,8 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prompt Result</title>
     <style>
         body {
@@ -10,6 +11,7 @@
             margin: 0;
             padding: 0;
             color: #333;
+            text-align: center;
         }
 
         .container {
@@ -69,14 +71,26 @@
             font-weight: bold;
         }
 
-        .scrollable-paragraph {
+        .response-container {
             width: 60%; /* Narrow width */
+            margin: 20px auto; /* Centering the container */
+            text-align: left;
+        }
+
+        .scrollable-paragraph {
             max-height: 400px; /* Maximum height */
-            margin: 20px auto; /* Centering the paragraph */
             overflow-y: scroll; /* Enables vertical scrolling */
             padding: 15px;
             border: 1px solid #ccc; /* Adding a border */
             background-color: white;
+        }
+
+        .generate-link {
+            display: block;
+            margin: 20px auto;
+            text-decoration: none;
+            color: #50b3a2;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -84,23 +98,24 @@
     <header>
         <div class="container">
             <div id="branding">
-                <h1>response </h1>
+                <h1>Response</h1>
             </div>
             <nav>
                 <ul>
                     <li class="current">
-                        <a href="{% url 'generate_response' %}">Home</a></li>
+                        <a href="{% url 'generate_response' %}">Home</a>
+                    </li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <div class="container">
+    <div class="container response-container">
         <h2>Generated Response</h2>
         <div class="scrollable-paragraph">
             {{ generated_response }}
         </div>
-        <a href="{% url 'generate_response' %}">Generate another Response</a>
+        <a href="{% url 'generate_response' %}" class="generate-link">Generate Another Response</a>
     </div>
 </body>
 </html>
