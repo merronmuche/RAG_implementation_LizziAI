@@ -3,7 +3,7 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from dotenv import load_dotenv
 
 
-from . chunk_pdf import read_docx, chunk_text
+from .read_chunk import read_docx, chunk_text
 
 load_dotenv()
 
@@ -16,7 +16,7 @@ def embed_text(chunks):
 
 if __name__ == "__main__":
 
-    pdf_path = "/home/meron/Documents/work/tenacademy/week11/RAG_implementation_LizziAI/datalizzy/Robinson Advisory.docx"
+    pdf_path = "/home/meron/Documents/work/tenacademy/week11/RAG_implementation_LizziAI/datalizzy/Raptor Contract.docx"
     
     text = read_docx(docx.path)
     chunks = chunk_text(text, 150, 5)
