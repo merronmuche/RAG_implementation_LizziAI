@@ -32,17 +32,13 @@ async def get_reponse(user_question, selected_document_name):
     for text_chunk in chunks:
         similarity = cosine_similarity(embeded_question, text_chunk.embed)
         
-        # Add the current chunk to the list if there are less than 5 chunks
         if len(best_text_chunks) < 5:
             best_text_chunks.append((similarity, text_chunk.chunk))
         else:
-            # Check if the current chunk is more similar than the least similar chunk in the list
             min_similarity_index = min(range(5), key=lambda i: best_text_chunks[i][0])
             if similarity > best_text_chunks[min_similarity_index][0]:
-                # Replace the least similar chunk with the current chunk
                 best_text_chunks[min_similarity_index] = (similarity, text_chunk.chunk)
 
-    # Extract only the chunks from the tuple
     best_text_chunks = [chunk for _, chunk in best_text_chunks]
     total_text = ''.join(best_text_chunks)
     response = None  # Add a default value

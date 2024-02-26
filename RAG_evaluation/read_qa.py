@@ -1,5 +1,4 @@
 
-
 from docx import Document
 
 def read_docx(file_path):
@@ -24,9 +23,4 @@ def read_docx(file_path):
 if __name__ == "__main__":
     file_path = "/home/meron/Documents/work/tenacademy/week11/RAG_implementation_LizziAI/datalizzy/Raptor Q&A2.docx"
     content = read_docx(file_path)
-
-    # for idx, item in enumerate(content, 1):
-    #     print(f"Q{idx}: {item['question']}")
-    #     print(f"A{idx}: {item['answer']}")
-    #     print()
     print(content)
