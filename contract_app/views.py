@@ -55,7 +55,10 @@ def generate_response(request):
         total_text = ''.join(best_text_chunks)
         if best_text_chunks:
             response = generate_response_with_gpt_turbo(user_question, total_text)
-            return render(request, 'contract_app/prompt_result.html', context={'generated_response': response.content})
+            return render(request, 
+                          'contract_app/generate_response.html', 
+                          context={'generated_response': response.content, 
+                                   'user_question': user_question})
         else:
             return HttpResponse("No similar documents found.")
         
