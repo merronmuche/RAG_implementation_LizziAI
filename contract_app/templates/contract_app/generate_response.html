@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Automatic response Generation</h2>
+        <h2>LizzyAI chatbot</h2>
     </div>
 
     <form method="post" action="{% url 'generate_response' %}">
@@ -26,12 +26,12 @@
             </select>
 
             <!-- question -->
-            <div  class="scrollable-paragraph">
+            <div  class="question">
                 {{user_question}}
             </div>
             <!-- generated response display -->
             <br>
-            <div class="scrollable-paragraph">
+            <div class="answer">
                 {{ generated_response }}
             </div>
             
@@ -40,8 +40,6 @@
         <textarea id="input_text" name="input_text" cols="40" rows="5" placeholder="Enter your text here"></textarea><br>
         <input type="submit" value="Generate">
     </form>
-    <a href="{% url 'generate_response' %}">Generate another Response</a>
-
 </body>
 </html>
 

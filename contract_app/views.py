@@ -31,6 +31,8 @@ def generate_response_with_gpt_turbo(user_question, relevant_text_chunk):
 
 def generate_response(request):
 
+    documents = Document.objects.all()
+
     if request.method == 'POST':
         user_question = request.POST.get('input_text')
         selected_document_name = request.POST.get('document', '')
@@ -57,12 +59,13 @@ def generate_response(request):
             response = generate_response_with_gpt_turbo(user_question, total_text)
             return render(request, 
                           'contract_app/generate_response.html', 
-                          context={'generated_response': response.content, 
-                                   'user_question': user_question})
+                          context={
+                            'generated_response': response.content, 
+                            'user_question': user_question,
+                            'documents': documents
+                                   })
         else:
             return HttpResponse("No similar documents found.")
         
     elif request.method == 'GET':
-
-        documents = Document.objects.all()
         return render(request, 'contract_app/generate_response.html', context={'documents': documents})
