@@ -15,10 +15,10 @@ body {
 .container {
     width: 40%; /* Adjusted container width */
     height: auto; /* Set height to auto */
-    background-color: hsl(187, 4%, 61%);
+    background-color: hsl(197, 58%, 91%);
     padding: 10px;
     border-radius: 8px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 8px rgba(215, 219, 219, 0.1);
 }
 
 h2 {
@@ -42,7 +42,7 @@ select, textarea {
     width: 100%;
     padding: 6px;
     margin-bottom: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid #7f7bb8;
     border-radius: 4px;
     box-sizing: border-box;
 }
@@ -70,7 +70,7 @@ select, textarea {
 }
 
 input[type="submit"] {
-    background-color: #4caf50;
+    background-color: #bfc4bf;
     color: #fff;
     padding: 8px 12px;
     border: none;
