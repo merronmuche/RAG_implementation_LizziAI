@@ -2,9 +2,9 @@ body {
     font-family: 'Arial', sans-serif;
     background-color: #c4ece7;
     margin-top: 10px;
-    margin-right: 20px;
     margin-bottom: 10px;
-    margin-left: 20px;
+    margin-right: 20%;
+    margin-left: 20%;
     padding: 10p;
     display: flex;
     justify-content: center;
@@ -13,8 +13,9 @@ body {
 }
 
 .container {
-    width: 30%; /* Adjusted container width */
-    background-color: hsl(0, 9%, 87%);
+    width: 40%; /* Adjusted container width */
+    height: auto; /* Set height to auto */
+    background-color: hsl(0, 4%, 71%);
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
@@ -29,7 +30,7 @@ form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 10px; /* Adjusted margin */
+    margin: 10px;
 }
 
 label {
@@ -38,16 +39,18 @@ label {
 }
 
 select, textarea {
-    width: 100%;
+    width: 60%;
     padding: 6px;
     margin-bottom: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid #acbee6;
     border-radius: 4px;
     box-sizing: border-box;
+    margin-right: auto;
 }
 
 .question, .answer {
-    max-height: 200px;
+   height: auto;
+    width: 60%;
     overflow-y: auto;
     border: 1px solid;
     padding: 10px;
