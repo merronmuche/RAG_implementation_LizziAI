@@ -15,7 +15,7 @@ body {
 .container {
     width: 40%; /* Adjusted container width */
     height: auto; /* Set height to auto */
-    background-color: hsl(0, 4%, 71%);
+    background-color: hsl(187, 4%, 61%);
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
@@ -39,13 +39,12 @@ label {
 }
 
 select, textarea {
-    width: 60%;
+    width: 100%;
     padding: 6px;
     margin-bottom: 12px;
-    border: 1px solid #acbee6;
+    border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
-    margin-right: auto;
 }
 
 .question, .answer {
