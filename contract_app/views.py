@@ -34,7 +34,13 @@ def generate_response(request):
     documents = Document.objects.all()
 
     if request.method == 'POST':
+
         user_question = request.POST.get('input_text')
+        
+        # Retriever 
+        '''
+        The retriever takes in a user question and returns chunks.
+        '''
         selected_document_name = request.POST.get('document', '')
         selected_document = Document.objects.filter(pdf_file__icontains=selected_document_name)[0]
 
@@ -55,17 +61,18 @@ def generate_response(request):
 
         best_text_chunks = [chunk for _, chunk in best_text_chunks]
         total_text = ''.join(best_text_chunks)
-        if best_text_chunks:
-            response = generate_response_with_gpt_turbo(user_question, total_text)
-            return render(request, 
-                          'contract_app/generate_response.html', 
-                          context={
-                            'generated_response': response.content, 
-                            'user_question': user_question,
-                            'documents': documents
-                                   })
-        else:
-            return HttpResponse("No similar documents found.")
+        ############################################# end of retriever
+        
+        # Generator
+        response = generate_response_with_gpt_turbo(user_question, total_text)
+        ###################### end of generator
+        return render(request, 
+                        'contract_app/generate_response.html', 
+                        context={
+                        'generated_response': response.content, 
+                        'user_question': user_question,
+                        'documents': documents
+                                })
         
     elif request.method == 'GET':
         return render(request, 'contract_app/generate_response.html', context={'documents': documents})

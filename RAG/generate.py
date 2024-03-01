@@ -47,12 +47,12 @@ def generate_response(request):
         for text_chunk in chunks:
             similarity = cosine_similarity(embeded_question, text_chunk.embed)
             
-            # Add the current chunk to the list if there are less than 5 chunks
-            if len(best_text_chunks) < 5:
+            # Add the current chunk to the list if there are less than 3 chunks
+            if len(best_text_chunks) < 3:
                 best_text_chunks.append((similarity, text_chunk.chunk))
             else:
                 # Check if the current chunk is more similar than the least similar chunk in the list
-                min_similarity_index = min(range(5), key=lambda i: best_text_chunks[i][0])
+                min_similarity_index = min(range(3), key=lambda i: best_text_chunks[i][0])
                 if similarity > best_text_chunks[min_similarity_index][0]:
                     # Replace the least similar chunk with the current chunk
                     best_text_chunks[min_similarity_index] = (similarity, text_chunk.chunk)
