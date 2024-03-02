@@ -11,15 +11,17 @@ from ragas.metrics import (
     answer_correctness,
     answer_similarity
 )
+import sys
+sys.path.append('..')
 import pandas as pd
 from datasets import Dataset
 from RAG_evaluation.generate_resp import get_reponse
 
 
-async def create_ragas_dataset(eval_dataset):
+async def create_ragas_dataset(eval_dataset, document_name):
   rag_dataset = []
   for row in tqdm(eval_dataset):
-    answer, context = await get_reponse(row["question"], selected_document_name='docx/Raptor_Contract.docx')
+    answer, context = await get_reponse(row["question"], selected_document_name=document_name)
     rag_dataset.append(
         {"question" : row["question"],
          "answer" : answer,
