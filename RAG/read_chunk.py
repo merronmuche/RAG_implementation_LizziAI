@@ -11,7 +11,7 @@ def read_docx(file_path):
     return base_doc
 
 def chunk_text(doc):
-    chunks = RecursiveCharacterTextSplitter(chunk_size=500)
+    chunks = RecursiveCharacterTextSplitter(chunk_size=2000)
     x = chunks.split_text(doc)
     return x
 
