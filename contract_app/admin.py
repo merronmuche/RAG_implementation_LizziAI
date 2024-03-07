@@ -1,8 +1,7 @@
 from django.contrib import admin
 
 
-from django.contrib import admin
-from .models import Document, TextChunk
+from .models import Document, TextChunk, Conversation
 
 class DocumentAdmin(admin.ModelAdmin):
     list_display = ('pdf_file', 'created_at', 'updated_at')
@@ -12,6 +11,11 @@ class DocumentAdmin(admin.ModelAdmin):
 class TextChunkAdmin(admin.ModelAdmin):
     list_display = ('chunk', 'embed', 'updated_at')
   
+
+class ConversationAdmin(admin.ModelAdmin):
+    list_display = ('question', 'answer', 'created_at')
+
+admin.site.register(Conversation, ConversationAdmin)
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(TextChunk, TextChunkAdmin)
 
