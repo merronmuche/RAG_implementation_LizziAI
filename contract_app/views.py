@@ -3,7 +3,7 @@ from django.shortcuts import HttpResponse, render
 from RAG.embed_text import embed_text
 from RAG.similarity import cosine_similarity
 from dotenv import load_dotenv
-from .models import Document, TextChunk
+from .models import Conversation, Document, TextChunk
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 
@@ -11,12 +11,12 @@ load_dotenv()
 
 chat = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0.2)
 
-def generate_response_with_gpt_turbo(user_question, relevant_text_chunk):
+def generate_response_with_gpt_turbo(user_question, relevant_text_chunk, history):
    
     prompt = f"AI Language Model Assistant, based on the provided information:\n"\
-            f"User Question: '{user_question}'\n"\
+            f"User Question: '+ \n {history} \n {user_question}'\n"\
             f"Relevant Text Chunk: '{relevant_text_chunk}'\n"\
-            f"Please provide a concise and fact-based answer to the user's question:\n"\
+            f"Please provide a short, concise and fact-based answer to the user's question:\n"\
             f"Answer: "
 
 
@@ -43,6 +43,12 @@ def generate_response(request):
         '''
         selected_document_name = request.POST.get('document', '')
         selected_document = Document.objects.filter(pdf_file__icontains=selected_document_name)[0]
+        converstations = Conversation.objects.all()
+        
+        history = {}
+        for conv in converstations:
+            x = {'Question': conv.question, 'Answer': conv.answer}
+            history.update(x)
 
         embeded_question = embed_text([user_question])[0]
 
@@ -64,7 +70,10 @@ def generate_response(request):
         ############################################# end of retriever
         
         # Generator
-        response = generate_response_with_gpt_turbo(user_question, total_text)
+        response = generate_response_with_gpt_turbo(user_question, total_text, history)
+        
+        # save the conversation
+        Conversation.objects.create(question=user_question, answer = response.content)
         ###################### end of generator
         return render(request, 
                         'contract_app/generate_response.html', 
