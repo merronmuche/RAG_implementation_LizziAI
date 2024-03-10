@@ -11,7 +11,7 @@ load_dotenv()
 
 chat = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0.2)
 
-def generate_response_with_gpt_turbo(user_question, relevant_text_chunk, history):
+def generate_response_with_gpt_turbo(user_question, relevant_text_chunk, history = ''):
    
     prompt = f"AI Language Model Assistant, based on the provided information:\n"\
             f"User Question: '+ \n {history} \n {user_question}'\n"\
