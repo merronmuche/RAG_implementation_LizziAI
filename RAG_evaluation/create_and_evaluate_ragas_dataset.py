@@ -15,7 +15,7 @@ import sys
 sys.path.append('..')
 import pandas as pd
 from datasets import Dataset
-from RAG_evaluation.generate_resp import get_reponse
+from generate_practice import get_reponse
 
 
 async def create_ragas_dataset(eval_dataset, document_name):

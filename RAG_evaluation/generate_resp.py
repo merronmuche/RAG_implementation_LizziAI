@@ -2,15 +2,11 @@
 
 import os
 import django
-
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lizzy_AI.settings')
 django.setup()
-
 import sys
-
-from contract_app.views import generate_response_with_gpt_turbo
 sys.path.append('..')
-
+from contract_app.views import generate_response_with_gpt_turbo
 from RAG.embed_text import embed_text
 from RAG.similarity import cosine_similarity
 from contract_app.models import Document, TextChunk, Conversation
