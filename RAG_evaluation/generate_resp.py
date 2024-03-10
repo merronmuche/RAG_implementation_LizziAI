@@ -32,15 +32,20 @@ async def get_reponse(user_question, selected_document_name):
     for text_chunk in chunks:
         similarity = cosine_similarity(embeded_question, text_chunk.embed)
         
-        if len(best_text_chunks) < 5:
+        if len(best_text_chunks) < 3:
             best_text_chunks.append((similarity, text_chunk.chunk))
         else:
-            min_similarity_index = min(range(5), key=lambda i: best_text_chunks[i][0])
+            min_similarity_index = min(range(3), key=lambda i: best_text_chunks[i][0])
             if similarity > best_text_chunks[min_similarity_index][0]:
                 best_text_chunks[min_similarity_index] = (similarity, text_chunk.chunk)
 
-    best_text_chunks = [chunk for _, chunk in best_text_chunks]
-    total_text = ''.join(best_text_chunks)
+    # Use a different variable name for the final list
+    final_best_text_chunks = []
+    for _, chunk in best_text_chunks:
+        final_best_text_chunks.append(chunk)
+
+    total_text = ''.join(final_best_text_chunks)
+
     response = None  # Add a default value
     if best_text_chunks:
         response = generate_response_with_gpt_turbo(user_question, total_text)
@@ -48,6 +53,17 @@ async def get_reponse(user_question, selected_document_name):
     return response.content if response else None, best_text_chunks
 
 
+if __name__=="__main__":
 
+    import asyncio
+    from RAG_evaluation.read_qa import read_docx
+
+    file_path = "/home/meron/Documents/work/tenacademy/week11/RAG_implementation_LizziAI/data/Robinson_Q&A.docx"
+    content = read_docx(file_path)
+    selected_document_name = 'docx/Robinson_Advisory_opgMThn.docx'
+    
+    response =  asyncio.run(get_reponse('What is your name?', selected_document_name))
+
+    print(response)
 
 

@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     pdf_path = "/home/meron/Documents/work/tenacademy/week11/RAG_implementation_LizziAI/datalizzy/Raptor Contract.docx"
     
-    text = read_docx(docx.path)
+    text = read_docx()
     chunks = chunk_text(text, 150, 5)
 
     embeds = embed_text(chunks)

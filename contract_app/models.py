@@ -1,6 +1,5 @@
 
 
-from collections.abc import Iterable
 from django.db import models
 from RAG.read_chunk import read_docx, chunk_text
 from RAG.embed_text import embed_text
