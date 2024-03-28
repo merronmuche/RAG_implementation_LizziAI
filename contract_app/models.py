@@ -28,6 +28,7 @@ class Document(models.Model):
             logger.error("No docx file to process.")
 
 
+
 class TextChunk(models.Model):
     document = models.ForeignKey(
         Document, on_delete=models.CASCADE, related_name="textchunks"
@@ -38,8 +39,17 @@ class TextChunk(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class Topic(models.Model):
+    title = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class Conversation(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null = True)
     question = models.CharField(max_length=100)
     answer = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
 
