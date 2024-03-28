@@ -2,7 +2,7 @@ from django.shortcuts import HttpResponse, render
 from RAG.embed_text import embed_text
 from RAG.similarity import cosine_similarity
 from dotenv import load_dotenv
-from .models import Conversation, Document, TextChunk
+from .models import Conversation, Document, TextChunk,Topic
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 from django.contrib.auth.decorators import login_required
@@ -33,6 +33,7 @@ def generate_response_with_gpt_turbo(user_question, relevant_text_chunk, history
 @login_required
 def generate_response(request):
     documents = Document.objects.all()
+    topics = Topic.objects.all()
 
     if request.method == "POST":
         user_question = request.POST.get("input_text")
@@ -45,7 +46,10 @@ def generate_response(request):
         selected_document = Document.objects.filter(
             pdf_file__icontains=selected_document_name
         )[0]
-        converstations = Conversation.objects.all()
+        topic_title = request.POST.get("topic", "")  # Assuming you have a field for topic selection in your HTML form
+        topic_instance, _ = Topic.objects.get_or_create(title=topic_title)
+         
+        converstations = Conversation.objects.filter(topic=topic_instance) 
 
         history = {}
         for conv in converstations:
@@ -80,8 +84,8 @@ def generate_response(request):
         response = generate_response_with_gpt_turbo(user_question, total_text, history)
 
         # save the conversation
-        Conversation.objects.create(question=user_question, answer=response.content)
-        ###################### end of generator
+        Conversation.objects.create(topic=topic_instance, question=user_question, answer=response.content)
+            ###################### end of generator
         return render(
             request,
             "contract_app/generate_response.html",
@@ -89,6 +93,7 @@ def generate_response(request):
                 "generated_response": response.content,
                 "user_question": user_question,
                 "documents": documents,
+                "topics": topics
             },
         )
 
@@ -96,5 +101,8 @@ def generate_response(request):
         return render(
             request,
             "contract_app/generate_response.html",
-            context={"documents": documents},
+            context={
+                "documents": documents, 
+                "topics": topics,
+                },
         )

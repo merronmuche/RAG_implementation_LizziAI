@@ -8,39 +8,54 @@
     <link rel="stylesheet" type="text/css" href="{% static 'contract_app/styles.css' %}">
 </head>
 <body>
-    <div class="container">
-        <h2>LizzyAI chatbot</h2>
-    </div>
-
-    <form method="post" action="{% url 'generate_response' %}">
-        {% csrf_token %}
-        <!--  document selection -->
-        <label for="document">Select Document:</label>
-            <select name="document" id="document">
-                <option value="">All Documents</option>
-                {% for document in documents %}
-                    <option value="{{ document.pdf_file.name }}" {% if document.pdf_file.name == selected_document %}selected{% endif %}>
-                        {{ document.pdf_file.name }}
-                    </option>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <h2>Topics</h2>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul>
+                {% for topic in topics %}
+                <li>{{ topic.title }}</li>
                 {% endfor %}
-            </select>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
 
-            <!-- question -->
-            <div  class="question">
-                {{user_question}}
-            </div>
-            <!-- generated response display -->
-            <br>
-            <div class="answer">
-                {{ generated_response }}
-            </div>
-            
-            <!-- input text -->
-            <br>
-        <textarea id="input_text" name="input_text" cols="40" rows="5" placeholder="Enter your text here"></textarea><br>
-        <input type="submit" value="Generate">
-    </form>
-</body>
+    <div class="container">
+        <div class="chat-window">
+            <h2>LizzyAI chatbot</h2>
+
+            <form method="post" action="{% url 'generate_response' %}">
+                {% csrf_token %}
+                <!--  document selection -->
+                <label for="document">Select Document:</label>
+                <select name="document" id="document">
+                    <option value="">All Documents</option>
+                    {% for document in documents %}
+                        <option value="{{ document.pdf_file.name }}" {% if document.pdf_file.name == selected_document %}selected{% endif %}>
+                            {{ document.pdf_file.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <!-- question -->
+                <div class="question">
+                    {{user_question}}
+                </div>
+                <!-- generated response display -->
+                <br>
+                <div class="answer">
+                    {{ generated_response }}
+                </div>
+                
+                <!-- input text -->
+                <br>
+                <textarea id="input_text" name="input_text" cols="40" rows="5" placeholder="Enter your text here"></textarea><br>
+                <input type="submit" value="Generate">
+            </form>
+        </div>
+    </div>
 </html>
-
 
