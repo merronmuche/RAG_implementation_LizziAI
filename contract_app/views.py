@@ -1,8 +1,8 @@
-from django.shortcuts import HttpResponse, render
+from django.shortcuts import render, redirect
 from RAG.embed_text import embed_text
 from RAG.similarity import cosine_similarity
 from dotenv import load_dotenv
-from .models import Conversation, Document, TextChunk,Topic
+from contract_app.models import Conversation, Document, TextChunk,Topic
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 from django.contrib.auth.decorators import login_required
@@ -10,7 +10,6 @@ from django.contrib.auth.decorators import login_required
 load_dotenv()
 
 chat = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0.2)
-
 
 def generate_response_with_gpt_turbo(user_question, relevant_text_chunk, history=""):
     prompt = (
@@ -37,7 +36,6 @@ def generate_response(request):
 
     if request.method == "POST":
         user_question = request.POST.get("input_text")
-
         # Retriever
         """
         The retriever takes in a user question and returns chunks.
@@ -46,18 +44,15 @@ def generate_response(request):
         selected_document = Document.objects.filter(
             pdf_file__icontains=selected_document_name
         )[0]
-        topic_title = request.POST.get("topic", "")  # Assuming you have a field for topic selection in your HTML form
-        topic_instance, _ = Topic.objects.get_or_create(title=topic_title)
-         
-        converstations = Conversation.objects.filter(topic=topic_instance) 
+        # topic_instance = Topic
+        # converstations = Conversation.objects.filter(topic=topic_instance) 
 
-        history = {}
-        for conv in converstations:
-            x = {"Question": conv.question, "Answer": conv.answer}
-            history.update(x)
+        # history = {}
+        # for conv in converstations:
+        #     x = {"Question": conv.question, "Answer": conv.answer}
+        #     history.update(x)
 
         embeded_question = embed_text([user_question])[0]
-
         best_text_chunks = []
         chunks = TextChunk.objects.filter(document=selected_document)
 
@@ -81,21 +76,24 @@ def generate_response(request):
         ############################################# end of retriever
 
         # Generator
-        response = generate_response_with_gpt_turbo(user_question, total_text, history)
+        response = generate_response_with_gpt_turbo(user_question, total_text)
 
-        # save the conversation
-        Conversation.objects.create(topic=topic_instance, question=user_question, answer=response.content)
+        # save the conversation and Topic
+        topic = Topic.objects.create(title = user_question)
+        Conversation.objects.create(topic=topic, question=user_question, answer=response.content)
             ###################### end of generator
-        return render(
-            request,
-            "contract_app/generate_response.html",
-            context={
-                "generated_response": response.content,
-                "user_question": user_question,
-                "documents": documents,
-                "topics": topics
-            },
-        )
+        # return render(
+        #     request,
+        #     "contract_app/generate_response.html",
+        #     context={
+        #         "generated_response": response.content,
+        #         "user_question": user_question,
+        #         "documents": documents,
+        #         "topics": topics
+        #     },
+        # )
+
+        return redirect('topic_view', topic.id)
 
     elif request.method == "GET":
         return render(
@@ -106,3 +104,21 @@ def generate_response(request):
                 "topics": topics,
                 },
         )
+
+def topic_view(request, id):
+    topics = Topic.objects.all()
+    topic_title = request.POST.get("topic", "")  # Assuming you have a field for topic selection in your HTML form
+    topic_instance, _ = Topic.objects.get_or_create(title=topic_title)
+    converstations = Conversation.objects.filter(topic=topic_instance) 
+    history = {}
+    for conv in converstations:
+        x = {"Question": conv.question, "Answer": conv.answer}
+        history.update(x)
+    return render(
+        request,
+        "contract_app/history.html",  # Update the template path as needed
+        {
+            "history": history['Question'],
+            "topics": topics,
+        },
+    )
