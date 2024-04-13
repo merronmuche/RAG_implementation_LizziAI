@@ -12,11 +12,11 @@
         <h2>Topics</h2>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul>
-                <a href="{% url 'topic_view' id=topic_id %}">
                     {% for topic in topics %}
-                    <li>{{ topic.title }}</li>
+                        <a href="{% url 'topic_view' id=topic.id %}">
+                            <li>{{ topic.title }}</li>
+                        </a>
                     {% endfor %}
-              </a>
             </ul>
         </div>
     </nav>
