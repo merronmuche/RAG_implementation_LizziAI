@@ -3,7 +3,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    
     <title>LezzyAI</title>
     <link rel="stylesheet" type="text/css" href="{% static 'contract_app/styles.css' %}">
 </head>
@@ -12,11 +11,7 @@
         <h2>Topics</h2>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul>
-                <a href="{% url 'topic_view' id=topic_id %}">
-                    {% for topic in topics %}
-                    <li>{{ topic.title }}</li>
-                    {% endfor %}
-              </a>
+                <a href="{% url 'topic_view' id=topic.id %}"><li>{{ topic.title }}</li></a>
             </ul>
         </div>
     </nav>
@@ -36,17 +31,16 @@
                         </option>
                     {% endfor %}
                 </select>
-
-                <!-- question -->
-                <div class="question">
-                    {{user_question}}
+                <div>
+                    {% for conv in conversations %}
+                    <div class="question">
+                    {{ conv.question }}
+                    </div>
+                    <div class="answer">
+                    {{ conv.answer }}
+                   </div>
+                    {% endfor %}
                 </div>
-                <!-- generated response display -->
-                <br>
-                <div class="answer">
-                    {{ generated_response }}
-                </div>
-                
                 <!-- input text -->
                 <br>
                 <textarea id="input_text" name="input_text" cols="40" rows="5" placeholder="Enter your text here"></textarea><br>
