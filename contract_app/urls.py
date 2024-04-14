@@ -1,6 +1,4 @@
-from django.contrib import admin
-from django.urls import include, path
-from django.conf import settings
+from django.urls import  path
 
 from contract_app.views import generate_response,topic_view
  
