@@ -2,14 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from RAG.embed_text import embed_text
 from RAG.similarity import cosine_similarity
 from dotenv import load_dotenv
-from contract_app.models import Conversation, Document, TextChunk,Topic
+from contract_app.models import Conversation, Document, TextChunk, Topic
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 from django.contrib.auth.decorators import login_required
-
 load_dotenv()
 
 chat = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0.2)
+
 
 def generate_response_with_gpt_turbo(user_question, relevant_text_chunk, history=""):
     prompt = (
@@ -28,6 +28,7 @@ def generate_response_with_gpt_turbo(user_question, relevant_text_chunk, history
     )
     return response
 
+
 @login_required
 def generate_response(request):
     documents = Document.objects.all()
@@ -35,15 +36,10 @@ def generate_response(request):
 
     if request.method == "POST":
         user_question = request.POST.get("input_text")
-        # Retriever
-        """
-        The retriever takes in a user question and returns chunks.
-        """
         selected_document_name = request.POST.get("document", "")
         selected_document = Document.objects.filter(
             pdf_file__icontains=selected_document_name
         )[0]
-
         embeded_question = embed_text([user_question])[0]
         best_text_chunks = []
         chunks = TextChunk.objects.filter(document=selected_document)
@@ -62,44 +58,52 @@ def generate_response(request):
                         similarity,
                         text_chunk.chunk,
                     )
-
         best_text_chunks = [chunk for _, chunk in best_text_chunks]
         total_text = "".join(best_text_chunks)
         response = generate_response_with_gpt_turbo(user_question, total_text)
-
-        topic = Topic.objects.create(title = user_question)
-        Conversation.objects.create(topic=topic, question=user_question, answer=response.content)
-
-        return redirect('topic_view', topic.id)
-
+        topic = Topic.objects.create(title=user_question)
+        Conversation.objects.create(
+            topic=topic, question=user_question, answer=response.content
+        )
+        return redirect("topic_view", topic.id)
     elif request.method == "GET":
         return render(
             request,
             "contract_app/generate_response.html",
             context={
-                "documents": documents, 
+                "documents": documents,
                 "topics": topics,
-                },
+            },
         )
+
 
 def topic_view(request, id):
     documents = Document.objects.all()
+    topics = Topic.objects.all()
+
     topic = get_object_or_404(Topic, id=id)
 
-    if request.method == "POST":
+    conversations = Conversation.objects.filter(topic=topic)
+
+    if request.method == "GET":
+
+        return render(
+            request,
+            "contract_app/generate_response.html",
+            context={
+                "documents": documents,
+                "conversations": conversations,
+                "topics": topics,
+            },
+        )
+
+    elif request.method == "POST":
+
         user_question = request.POST.get("input_text")
         selected_document_name = request.POST.get("document", "")
         selected_document = Document.objects.filter(
             pdf_file__icontains=selected_document_name
         )[0]
-        topic_instance = Topic
-        converstations = Conversation.objects.filter(topic=topic_instance) 
-
-        history = {}
-        for conv in converstations:
-            x = {"Question": conv.question, "Answer": conv.answer}
-            history.update(x)
-
         embeded_question = embed_text([user_question])[0]
         best_text_chunks = []
         chunks = TextChunk.objects.filter(document=selected_document)
@@ -118,37 +122,20 @@ def topic_view(request, id):
                         similarity,
                         text_chunk.chunk,
                     )
-
         best_text_chunks = [chunk for _, chunk in best_text_chunks]
         total_text = "".join(best_text_chunks)
         response = generate_response_with_gpt_turbo(user_question, total_text)
-
-        # save the conversation and Topic
-        topics = Topic.objects.create(title = user_question)
-        Conversation.objects.create(topic=topics, question=user_question, answer=response.content)
+        topic = Topic.objects.get(id = id)
+        Conversation.objects.create(
+            topic=topic, question=user_question, answer=response.content)
+        conversations = Conversation.objects.filter(topic=topic)
+    
         return render(
             request,
             "contract_app/generate_response.html",
             context={
                 "documents": documents,
-                "topic" : topic,
-                "converstations" : converstations
+                "conversations": conversations,
+                "topics": topics,
             },
         )
-   
-    if request.method == "GET":
-
-        topics = Topic.objects.all()
-        converstations = Conversation.objects.filter(topic=topic)
-        return render(
-            request,
-            "contract_app/generate_response.html",
-            context={
-                "documents": documents,
-                "topic" : topic,
-                "converstations" : converstations,
-                'topics': topics
-            },
-        )
-   
-   
