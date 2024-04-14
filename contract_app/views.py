@@ -29,113 +29,59 @@ def generate_response_with_gpt_turbo(user_question, relevant_text_chunk, history
     return response
 
 
-@login_required
-def generate_response(request):
+def process_question(request, id=None):
+    if id:
+        topic = get_object_or_404(Topic, id=id)
+        conversations = Conversation.objects.filter(topic=topic)
+    else:
+        topic = None
+        conversations = None
+
     documents = Document.objects.all()
     topics = Topic.objects.all()
 
     if request.method == "POST":
         user_question = request.POST.get("input_text")
         selected_document_name = request.POST.get("document", "")
-        selected_document = Document.objects.filter(
-            pdf_file__icontains=selected_document_name
-        )[0]
-        embeded_question = embed_text([user_question])[0]
-        best_text_chunks = []
-        chunks = TextChunk.objects.filter(document=selected_document)
+        selected_document = Document.objects.filter(pdf_file__icontains=selected_document_name).first()
 
-        for text_chunk in chunks:
-            similarity = cosine_similarity(embeded_question, text_chunk.embed)
+        if selected_document:
+            embeded_question = embed_text([user_question])[0]
+            best_text_chunks = []
+            chunks = TextChunk.objects.filter(document=selected_document)
 
-            if len(best_text_chunks) < 3:
-                best_text_chunks.append((similarity, text_chunk.chunk))
-            else:
-                min_similarity_index = min(
-                    range(3), key=lambda i: best_text_chunks[i][0]
-                )
-                if similarity > best_text_chunks[min_similarity_index][0]:
-                    best_text_chunks[min_similarity_index] = (
-                        similarity,
-                        text_chunk.chunk,
-                    )
-        best_text_chunks = [chunk for _, chunk in best_text_chunks]
-        total_text = "".join(best_text_chunks)
-        response = generate_response_with_gpt_turbo(user_question, total_text)
-        topic = Topic.objects.create(title=user_question)
-        Conversation.objects.create(
-            topic=topic, question=user_question, answer=response.content
-        )
-        return redirect("topic_view", topic.id)
-    elif request.method == "GET":
-        return render(
-            request,
-            "contract_app/generate_response.html",
-            context={
-                "documents": documents,
-                "topics": topics,
-            },
-        )
+            for text_chunk in chunks:
+                similarity = cosine_similarity(embeded_question, text_chunk.embed)
 
+                if len(best_text_chunks) < 3:
+                    best_text_chunks.append((similarity, text_chunk.chunk))
+                else:
+                    min_similarity_index = min(range(3), key=lambda i: best_text_chunks[i][0])
+                    if similarity > best_text_chunks[min_similarity_index][0]:
+                        best_text_chunks[min_similarity_index] = (similarity, text_chunk.chunk)
+
+            best_text_chunks = [chunk for _, chunk in best_text_chunks]
+            total_text = "".join(best_text_chunks)
+            response = generate_response_with_gpt_turbo(user_question, total_text)
+
+            if not topic:
+                topic = Topic.objects.create(title=user_question)
+
+            Conversation.objects.create(topic=topic, question=user_question, answer=response.content)
+            conversations = Conversation.objects.filter(topic=topic)
+
+            return redirect("topic_view", topic.id if topic else None)
+
+    return render(request, "contract_app/generate_response.html", {
+        "documents": documents,
+        "conversations": conversations,
+        "topics": topics,
+    })
+
+
+@login_required
+def generate_response(request):
+    return process_question(request)
 
 def topic_view(request, id):
-    documents = Document.objects.all()
-    topics = Topic.objects.all()
-
-    topic = get_object_or_404(Topic, id=id)
-
-    conversations = Conversation.objects.filter(topic=topic)
-
-    if request.method == "GET":
-
-        return render(
-            request,
-            "contract_app/generate_response.html",
-            context={
-                "documents": documents,
-                "conversations": conversations,
-                "topics": topics,
-            },
-        )
-
-    elif request.method == "POST":
-
-        user_question = request.POST.get("input_text")
-        selected_document_name = request.POST.get("document", "")
-        selected_document = Document.objects.filter(
-            pdf_file__icontains=selected_document_name
-        )[0]
-        embeded_question = embed_text([user_question])[0]
-        best_text_chunks = []
-        chunks = TextChunk.objects.filter(document=selected_document)
-
-        for text_chunk in chunks:
-            similarity = cosine_similarity(embeded_question, text_chunk.embed)
-
-            if len(best_text_chunks) < 3:
-                best_text_chunks.append((similarity, text_chunk.chunk))
-            else:
-                min_similarity_index = min(
-                    range(3), key=lambda i: best_text_chunks[i][0]
-                )
-                if similarity > best_text_chunks[min_similarity_index][0]:
-                    best_text_chunks[min_similarity_index] = (
-                        similarity,
-                        text_chunk.chunk,
-                    )
-        best_text_chunks = [chunk for _, chunk in best_text_chunks]
-        total_text = "".join(best_text_chunks)
-        response = generate_response_with_gpt_turbo(user_question, total_text)
-        topic = Topic.objects.get(id = id)
-        Conversation.objects.create(
-            topic=topic, question=user_question, answer=response.content)
-        conversations = Conversation.objects.filter(topic=topic)
-    
-        return render(
-            request,
-            "contract_app/generate_response.html",
-            context={
-                "documents": documents,
-                "conversations": conversations,
-                "topics": topics,
-            },
-        )
+    return process_question(request, id)
