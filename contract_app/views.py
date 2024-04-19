@@ -72,13 +72,12 @@ def process_question(request, id=None):
             best_text_chunks = [chunk for _, chunk in best_text_chunks]
             total_text = "".join(best_text_chunks)
 
-            conversation = Conversation.objects.filter(topic_id=id) if id else None
             history = []
-            if conversation is not None:
-                for conv in conversation:
-                    answer = conv.answer
-                    question = conv.question
-                    add_two = answer + question
+            if conversations is not None:
+                for conv in conversations:
+                    answer = 'quetion: ' + conv.answer
+                    question ='answer: ' + conv.question
+                    add_two = answer + ', ' + question
                     history.append(add_two)
             else:
                 None
@@ -89,9 +88,9 @@ def process_question(request, id=None):
 
             if not topic:
                 topic = Topic.objects.create(title=user_question)
-            conversations = Conversation.objects.create(
+            Conversation.objects.create(
                 topic=topic, question=user_question, answer=response.content
-            )
+            )   
 
             return redirect("topic_view", topic.id if topic else None)
 
