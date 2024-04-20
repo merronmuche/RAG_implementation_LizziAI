@@ -26,7 +26,7 @@
     <div class="container">
         <div class="chat-window">
             <h2>LizzyAI Chatbot</h2>
-            <form method="post" action="{{ request.path }}">
+            <form method="post" id = "myForm" action="{{ request.path }}">
                 {% csrf_token %}
                 <!-- Document selection -->
                 <label for="document">Select Document:</label>
@@ -53,7 +53,7 @@
 
                 <!-- Input text -->
                 <textarea id="input_text" name="input_text" cols="40" rows="5" placeholder="Enter your text here"></textarea><br>
-                <input type="submit" value="Generate">
+                <input id="submitButton" type="submit" value="Generate">
             </form>
         </div>
     </div>
@@ -66,5 +66,28 @@
             </ul>
         </div>
     </nav>
+
+    <script>
+        const textarea = document.getElementById('input_text');
+        const submitButton = document.getElementById('submitButton');
+    
+        textarea.addEventListener('keydown', function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();  // Prevent default Enter behavior (e.g., new line)
+                
+                // Change the background color of the submit button
+                submitButton.style.backgroundColor = '#45a049';
+    
+                // Optionally, submit the form programmatically
+                document.getElementById('myForm').submit();
+            }
+        });
+    
+        // Reset button color when textarea loses focus
+        textarea.addEventListener('blur', function() {
+            submitButton.style.backgroundColor = '';  // Reset to default or empty for CSS-based color
+        });
+    </script>
+    
 </body>
 </html>
