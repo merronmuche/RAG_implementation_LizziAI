@@ -107,3 +107,24 @@ input[type="submit"]:hover {
     color: black;          
 }
 
+.navbar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+}
+
+.navbar-nav li {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.navbar-nav li a {
+    display: block; /* Display links as block elements */
+    padding: 5px 10px;
+    text-decoration: none;
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
