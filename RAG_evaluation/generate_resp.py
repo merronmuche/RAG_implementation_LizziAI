@@ -2,14 +2,14 @@
 
 import os
 import django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lizzy_AI.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rag_chatbot.settings')
 django.setup()
 import sys
 sys.path.append('..')
-from contract_app.views import generate_response_with_gpt_turbo
+from app.views import generate_response_with_gpt_turbo
 from RAG.embed_text import embed_text
 from RAG.similarity import cosine_similarity
-from contract_app.models import Document, TextChunk, Conversation
+from app.models import Document, TextChunk, Conversation
 
 def get_reponse(user_question, selected_document_name):
 

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from RAG.embed_text import embed_text
 from RAG.similarity import cosine_similarity
 from dotenv import load_dotenv
-from contract_app.models import Conversation, Document, TextChunk, Topic
+from app.models import Conversation, Document, TextChunk, Topic
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 from django.contrib.auth.decorators import login_required
@@ -100,7 +100,7 @@ def process_question(request, id=None):
 
     return render(
         request,
-        "contract_app/generate_response.html",
+        "app/generate_response.html",
         {
             "documents": documents,
             "conversations": conversations,

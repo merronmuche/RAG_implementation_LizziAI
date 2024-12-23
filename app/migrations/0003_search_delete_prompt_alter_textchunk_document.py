@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contract_app', '0002_conversation_alter_document_pdf_file'),
+        ('app', '0002_conversation_alter_document_pdf_file'),
     ]
 
     operations = [
@@ -26,6 +26,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='textchunk',
             name='document',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='textchunks', to='contract_app.document'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='textchunks', to='app.document'),
         ),
     ]

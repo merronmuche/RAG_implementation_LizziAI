@@ -4,7 +4,7 @@ from django.shortcuts import HttpResponse, render
 from embed_text import embed_text
 from similarity import cosine_similarity
 from dotenv import load_dotenv
-from contract_app.models import Document, TextChunk
+from app.models import Document, TextChunk
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 
@@ -64,8 +64,8 @@ def generate_response(request):
             # Use the user's question and the relevant text chunk directly
             response = generate_response_with_gpt_turbo(user_question, total_text)
 
-            return render(request, 'contract_app/prompt_result.html', context={'generated_response': response.content})
-            # return render(request, 'contract_app/generate_response.html', {'generated_response': response})
+            return render(request, 'app/prompt_result.html', context={'generated_response': response.content})
+            # return render(request, 'app/generate_response.html', {'generated_response': response})
 
         else:
             return HttpResponse("No similar documents found.")
@@ -73,4 +73,4 @@ def generate_response(request):
     elif request.method == 'GET':
 
         documents = Document.objects.all()
-        return render(request, 'contract_app/generate_response.html', context={'documents': documents})
+        return render(request, 'app/generate_response.html', context={'documents': documents})

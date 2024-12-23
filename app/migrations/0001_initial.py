@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('embed', models.JSONField(blank=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('document', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contract_app.document')),
+                ('document', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.document')),
             ],
         ),
     ]
