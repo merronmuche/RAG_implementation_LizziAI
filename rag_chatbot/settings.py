@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -155,3 +156,8 @@ iLOGGING = {
         # You can define more loggers here if needed
     },
 }
+
+
+load_dotenv()
+
+api_key = os.getenv("OPENAI_API_KEY")

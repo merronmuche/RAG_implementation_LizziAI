@@ -6,11 +6,20 @@ from app.models import Conversation, Document, TextChunk, Topic
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 from django.contrib.auth.decorators import login_required
+import os
 
 
 load_dotenv()
 
-chat = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0.2)
+
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise EnvironmentError("OPENAI_API_KEY is not set. Please set the environment variable.")
+
+chat = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0.2, openai_api_key=api_key)
+
+
+# chat = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0.2)
 
 
 def generate_response_with_gpt_turbo(user_question, relevant_text_chunk, conversations):
